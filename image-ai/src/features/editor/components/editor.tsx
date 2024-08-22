@@ -29,7 +29,7 @@ export const Editor = () => {
 
     setActiveTool(tool);
   },[activeTool]);
-  const { init } = useEditor();
+  const { init, editor } = useEditor();
 
   const canvasRef = useRef(null); 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,6 +64,7 @@ export const Editor = () => {
         <ShapeSidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
+          editor={editor}
         />
         <main className="bg-muted flex-1 overflow-auto relative flex flex-col">
           <Toolbar />
