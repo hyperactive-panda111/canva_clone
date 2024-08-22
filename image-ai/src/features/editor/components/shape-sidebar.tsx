@@ -10,7 +10,7 @@ import { FaDiamond } from 'react-icons/fa6';
 import { IoTriangle } from 'react-icons/io5';
 
 interface ShapeSidebarProps {
-    editor: Editor;
+    editor?: Editor;
     activeTool: ActiveTool;
     onChangeActiveTool: (tool: ActiveTool) => void;
 }
