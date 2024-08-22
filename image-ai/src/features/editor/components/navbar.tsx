@@ -22,10 +22,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+interface NavbarProps {
+  activeTool: ActiveTool;
+  onChangeActiveTool: (tool: ActiveTool) => void;
+}
+
 import { Hint } from "./tooltip";
 import { BsCloudCheck } from "react-icons/bs";
+import { ActiveTool } from "../types";
+import { cn } from "@/lib/utils";
 
-export default function Navbar() {
+export const Navbar =  ({
+  activeTool,
+  onChangeActiveTool,
+}: NavbarProps) => {
   return (
     <nav className="w-full flex items-center p-4 h-[68px] gap-x-8 border-b lg:pl-[34px]">
       <Logo />
@@ -53,7 +64,11 @@ export default function Navbar() {
         {/* BUTTON TODO: add functionality
             TODO: add dynamic styles*/}
         <Hint label={"Select"} side="bottom" sideOffset={10}>
-          <Button variant="ghost" size={"icon"} onClick={() => {}} className="">
+          <Button 
+            variant="ghost" 
+            size={"icon"} 
+            onClick={() => onChangeActiveTool('select')} 
+            className={cn(activeTool === 'select' && 'bg-gray-100')}>
             <MousePointerClickIcon className="size-4" />
           </Button>
         </Hint>
