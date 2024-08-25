@@ -159,7 +159,7 @@ const buildEditor = ({
         },
         canvas,
         getActiveFillColor: () => {
-            const selectedObject = editor?.selectedObjects[0];
+            const selectedObject = selectedObjects[0];
 
             if (!selectedObject) {
                 return fillColor;
