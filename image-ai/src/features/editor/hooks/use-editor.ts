@@ -6,13 +6,27 @@ import {
     CIRCLE_OPTIONS, 
     DIAMOND_OPTIONS, 
     Editor, 
+    FILL_COLOR, 
     RECTANGLE_OPTIONS, 
+    STROKE_COLOR, 
+    STROKE_WIDTH, 
     TRIANGLE_OPTIONS 
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
+import { useCanvasEvents } from './use-canvas-events';
+import { isTextType } from '../utils';
 
-const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
+const buildEditor = ({ 
+    canvas,
+    fillColor,
+    setFillColor,
+    strokeColor,
+    setStrokeColor,
+    strokeWidth,
+    setStrokeWidth,
+    selectedObjects,
+ }: BuildEditorProps): Editor => {
     const getWorkspace = () => {
         return canvas.getObjects().find((obj) => obj.name === 'clip');
     };
@@ -34,18 +48,50 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
     }
 
     return {
+        changeFillColor: (value: string) => {
+            setFillColor(value);
+            canvas.getActiveObjects().forEach((obj) => {
+                obj.set({ fill: value });
+            });
+            canvas.renderAll();
+
+        },
+        changeStrokeColor: (value: string) => {
+            setStrokeColor(value);
+            canvas.getActiveObjects().forEach((obj) => {
+                // Text types don't a stroke value, so we need to check it
+                if (isTextType(obj.type)) {
+                    obj.set({ fill: value });
+                }
+                obj.set({ stroke: value });
+                canvas.renderAll();
+            });
+        },
+        changeStrokeWidth: (value: number) => {
+            canvas.getActiveObjects().forEach((obj) => {
+                obj.set({ strokeWidth: value });
+            });
+            canvas.renderAll();
+        },
         addCircle: () => {
             const object = new fabric.Circle({
                 ...CIRCLE_OPTIONS,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
             
             addToCanvas(object);
+            canvas.renderAll();
         },
         addSoftRectangle: () => {
             const object = new fabric.Rect({
                 ...RECTANGLE_OPTIONS,
                 rx: 50,
                 ry: 50,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
             
             addToCanvas(object);
@@ -53,6 +99,9 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
         addRectangle: () => {
             const object = new fabric.Rect({
                 ...RECTANGLE_OPTIONS,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
             
             addToCanvas(object);
@@ -60,6 +109,9 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
         addTriangle: () => {
             const object = new fabric.Triangle({
                 ...TRIANGLE_OPTIONS,
+                fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
             });
             
             addToCanvas(object);
@@ -76,6 +128,9 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
                 ],
                 {
                     ...TRIANGLE_OPTIONS,
+                    fill: fillColor,
+                stroke: strokeColor,
+                strokeWidth: strokeWidth,
                 }
             );
             
@@ -94,30 +149,63 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
                 ],
                 {
                     ...DIAMOND_OPTIONS,
+                    fill: fillColor,
+                    stroke: strokeColor,
+                    strokeWidth: strokeWidth,
                 }
             );
         
             addToCanvas(object);
         },
+        canvas,
+        fillColor,
+        strokeColor,
+        strokeWidth,
+        selectedObjects,
     };
 };
 
 export const useEditor = () => {
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
+    const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
+
+    const [fillColor, setFillColor] = useState(FILL_COLOR);
+    const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
+    const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
 
     useAutoResize({
         canvas,
         container,
     });
 
+    useCanvasEvents({
+        canvas,
+        container,
+        setSelectedObjects,
+    });
+
     const editor = useMemo(() => {
         if (canvas) {
-            return buildEditor({canvas});
+            return buildEditor({
+                canvas,
+                fillColor,
+                setFillColor,
+                strokeColor,
+                setStrokeColor,
+                strokeWidth,
+                setStrokeWidth,
+                selectedObjects,
+            });
         };
 
         return undefined;
-    }, [canvas]);
+    }, [canvas,
+        fillColor,
+        strokeColor,
+        strokeWidth,
+        selectedObjects,
+        ]);
 
 
     const init = useCallback(({
