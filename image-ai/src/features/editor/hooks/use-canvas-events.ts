@@ -25,6 +25,7 @@ export const useCanvasEvents = ({
             });
             canvas.on('selection:cleared', (e) => {
                 console.log('selection: cleared');
+                
                 setSelectedObjects([]);
             });
         };
