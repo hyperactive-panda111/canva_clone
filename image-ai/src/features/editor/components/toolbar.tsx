@@ -17,7 +17,7 @@ export const Toolbar = ({
     onChangeActiveTool,
 }: ToolbarProps) => {
 
-    const fillColor = editor?.fillColor;
+    const fillColor = editor?.getActiveFillColor();
 
     if (editor?.selectedObjects.length === 0) {
         return (
