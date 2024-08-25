@@ -8,7 +8,10 @@ import { Navbar } from "./navbar";
 import { Sidebar } from "./sidebar";
 import { Toolbar } from "./toolbar";
 import { Footer } from "./footer";
-import { ActiveTool } from "../types";
+import { 
+  ActiveTool, 
+  selectionDependentTools 
+} from "../types";
 import { ShapeSidebar } from "./shape-sidebar";
 import { FillColorSidebar } from "./fill-color-sideabar";
 
@@ -30,6 +33,12 @@ export const Editor = () => {
 
     setActiveTool(tool);
   },[activeTool]);
+
+  const onClearSelection = useCallback(() => {
+    if (selectionDependentTools.includes(activeTool)) {
+      setActiveTool('select');
+    }
+  }, [activeTool]);
   
   const { init, editor } = useEditor();
 
