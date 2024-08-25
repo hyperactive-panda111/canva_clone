@@ -165,7 +165,7 @@ const buildEditor = ({
                 return fillColor;
             }
 
-            const value = selectedObject[0].get('fill') || fillColor;
+            const value = selectedObject.get('fill') || fillColor;
             return value as string;
         },
         strokeColor,
