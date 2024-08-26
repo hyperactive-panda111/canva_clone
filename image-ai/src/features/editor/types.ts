@@ -115,6 +115,8 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+    getActiveOpacity: () => void;
+    changeOpacity: (value: number) => void;
     bringFoward: () => void;
     sendBackwards: () => void;
     changeFillColor: (value: string) => void;
