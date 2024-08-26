@@ -37,7 +37,7 @@ export const StrokeColorSidebar = ({
                 description='Add a border color to your element' />
             <ScrollArea>
                 <div className="p-4 space-y-6">
-                    <ColorPicker
+                <ColorPicker
                        value={value}
                        onChange={onChange}
                     />
