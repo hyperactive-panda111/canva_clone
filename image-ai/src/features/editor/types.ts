@@ -107,6 +107,10 @@ export type BuildEditorProps = {
     selectedObjects: fabric.Object[];
 }
 
+export interface EditorHookProps {
+    clearSelectionCallback: () => void;
+}
+
 export interface Editor {
     changeFillColor: (value: string) => void;
     changeStrokeColor: (value: string) => void;
@@ -119,7 +123,7 @@ export interface Editor {
     addDiamond: () => void;
     canvas: fabric.Canvas;
     getActiveFillColor: () => string;
-    strokeColor: string;
+    getActiveStrokeColor: () => string;
     strokeWidth: number;
     selectedObjects: fabric.Object[];
 }

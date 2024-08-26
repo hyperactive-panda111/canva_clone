@@ -14,6 +14,7 @@ import {
 } from "../types";
 import { ShapeSidebar } from "./shape-sidebar";
 import { FillColorSidebar } from "./fill-color-sideabar";
+import { StrokeColorSidebar } from "./stroke-color-sidebar";
 
 export const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
@@ -40,7 +41,9 @@ export const Editor = () => {
     }
   }, [activeTool]);
   
-  const { init, editor } = useEditor();
+  const { init, editor } = useEditor({
+    clearSelectionCallback: onClearSelection
+  });
 
   const canvasRef = useRef(null); 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -78,6 +81,11 @@ export const Editor = () => {
           editor={editor}
         />
         <FillColorSidebar 
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+          editor={editor}
+        />
+         <StrokeColorSidebar 
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
           editor={editor}
