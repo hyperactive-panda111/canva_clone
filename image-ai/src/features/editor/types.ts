@@ -115,6 +115,8 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+    bringFoward: () => void;
+    sendBackwards: () => void;
     changeFillColor: (value: string) => void;
     changeStrokeColor: (value: string) => void;
     changeStrokeWidth: (value: number) => void;
