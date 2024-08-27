@@ -175,7 +175,9 @@ export interface Editor {
     changeFontFamily: (value: string) => void;
     changeFontWeight: (value: number) => void;
     changeFontStyle: (value: string) => void;
+    changeFontLinethrough: (value: boolean) => void;
     changeStrokeDashArray: (value: number[]) => void;
+    changeFontUnderline: (value: boolean) => void;
     addCircle: () => void;
     addSoftRectangle: () => void;
     addRectangle: () => void;
@@ -191,6 +193,8 @@ export interface Editor {
     getActiveFontFamily: () => string;
     getActiveFontWeight: () => number;
     getActiveFontStyle: () => string;
+    getActiveFontLinethrough: () => boolean;
+    getActiveFontUnderline: () => boolean;
 
 }
 

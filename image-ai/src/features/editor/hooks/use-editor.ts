@@ -87,6 +87,50 @@ const buildEditor = ({
             });
             canvas.renderAll();
         },
+        changeFontLinethrough: (value: boolean) => {
+            canvas.getActiveObjects().forEach((obj) => {
+                if (isTextType(obj.type)) {
+                    //@ts-ignore
+                    // Faulty TS library, linethrough property exists
+                    obj.set({ linethrough: value });
+                }
+            });
+            canvas.renderAll();
+        },
+        getActiveFontLinethrough: () => {
+            const selectedObject = selectedObjects[0];
+
+            if (!selectedObject) {
+                return false;
+            }
+
+            //@ts-ignore
+            // Faulty TS library, fontStyle property exists
+            const value = selectedObject.get('linethrough') || false;
+            return value as boolean;
+        },
+        changeFontUnderline: (value: boolean) => {
+            canvas.getActiveObjects().forEach((obj) => {
+                if (isTextType(obj.type)) {
+                    //@ts-ignore
+                    // Faulty TS library, underline property exists
+                    obj.set({ underline: value });
+                }
+            });
+            canvas.renderAll();
+        },
+        getActiveFontUnderline: () => {
+            const selectedObject = selectedObjects[0];
+
+            if (!selectedObject) {
+                return false;
+            }
+
+            //@ts-ignore
+            // Faulty TS library, underline property exists
+            const value = selectedObject.get('underline') || false;
+            return value as boolean;
+        },
         changeFontStyle: (value: string) => {
             canvas.getActiveObjects().forEach((obj) => {
                 if (isTextType(obj.type)) {
