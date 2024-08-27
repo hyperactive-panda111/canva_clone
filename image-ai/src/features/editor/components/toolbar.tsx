@@ -4,7 +4,10 @@ import { BsBorderWidth } from "react-icons/bs";
 import {
      ArrowUp, 
      ArrowDown, 
-     ChevronDown 
+     ChevronDown, 
+     AlignLeft,
+     AlignCenter,
+     AlignRight
 } from "lucide-react";
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { Button } from "@/components/ui/button";
@@ -41,6 +44,7 @@ export const Toolbar = ({
     const initialFontStyle = editor?.getActiveFontStyle() || 'normal';
     const initialFontUnderline = editor?.getActiveFontUnderline();
     const initialFontLinethrough = editor?.getActiveFontLinethrough();
+    const initialTextAlign = editor?.getActiveTextAlign();
 
     const [properties, setProperties] = useState({
         fillColor: initialFillColor,
@@ -50,6 +54,7 @@ export const Toolbar = ({
         fontStyle: initialFontStyle,
         fontUnderline: initialFontUnderline,
         fontLinethrough: initialFontLinethrough,
+        textAlign: initialTextAlign,
 
     });
 
@@ -57,6 +62,18 @@ export const Toolbar = ({
     const selectedObjectType = editor?.selectedObjects[0]?.type;
     
     const isText = isTextType(selectedObjectType);
+
+    const onChangeTextAlign = (value: string) => {
+        if (!selectedObject) {
+            return ;
+        }
+
+        editor?.changeTextAlign(value);
+        setProperties((current) => ({
+            ...current,
+            textAlign: value,
+        }))
+    };
 
     const toggleBold = () => {
         if (!selectedObject) {
@@ -259,6 +276,51 @@ export const Toolbar = ({
                         )}
                     >
                         <FaStrikethrough className="size-4"/>
+                    </Button>
+                </Hint>
+            </div>
+            )}
+             {isText && (<div className="flex items-center justify-center h-full">
+                <Hint label="Align left" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => onChangeTextAlign('left')}
+                        variant={'ghost'}
+                        size={'icon'}
+                        className={cn(
+                            properties.textAlign === 'left' && 'bg-gray-100'
+                        )}
+                    >
+                        <AlignLeft className="size-4"/>
+                    </Button>
+                </Hint>
+            </div>
+            )}
+            {isText && (<div className="flex items-center justify-center h-full">
+                <Hint label="Align center" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => onChangeTextAlign('center')}
+                        variant={'ghost'}
+                        size={'icon'}
+                        className={cn(
+                            properties.textAlign === 'center' && 'bg-gray-100'
+                        )}
+                    >
+                        <AlignCenter className="size-4"/>
+                    </Button>
+                </Hint>
+            </div>
+            )}
+            {isText && (<div className="flex items-center justify-center h-full">
+                <Hint label="Align right" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => onChangeTextAlign('right')}
+                        variant={'ghost'}
+                        size={'icon'}
+                        className={cn(
+                            properties.textAlign === 'right' && 'bg-gray-100'
+                        )}
+                    >
+                        <AlignRight className="size-4"/>
                     </Button>
                 </Hint>
             </div>
