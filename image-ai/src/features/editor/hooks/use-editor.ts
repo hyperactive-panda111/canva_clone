@@ -8,6 +8,7 @@ import {
     Editor, 
     EditorHookProps, 
     FILL_COLOR, 
+    FONT_FAMILY, 
     RECTANGLE_OPTIONS, 
     STROKE_COLOR, 
     STROKE_DASH_ARRAY, 
@@ -23,6 +24,8 @@ import { isTextType } from '../utils';
 const buildEditor = ({ 
     canvas,
     fillColor,
+    fontFamily,
+    setFontFamily,
     setFillColor,
     strokeColor,
     setStrokeColor,
@@ -97,13 +100,21 @@ const buildEditor = ({
             const workspace = getWorkspace();
             workspace?.sendToBack();
         },
+        changeFontFamily: (value: string) => {
+            setFontFamily(value);
+            canvas.getActiveObjects().forEach((obj) => {
+                if (isTextType(obj.type)) {
+                    obj._set('fontFamily', value);
+                }
+            });
+            canvas.renderAll();
+        },
         changeFillColor: (value: string) => {
             setFillColor(value);
             canvas.getActiveObjects().forEach((obj) => {
                 obj.set({ fill: value });
             });
             canvas.renderAll();
-
         },
         changeStrokeColor: (value: string) => {
             setStrokeColor(value);
@@ -221,14 +232,16 @@ const buildEditor = ({
             addToCanvas(object);
         },
         canvas,
-        getActiveFillColor: () => {
+        getActiveFontFamily: () => {
             const selectedObject = selectedObjects[0];
 
             if (!selectedObject) {
-                return fillColor;
+                return fontFamily;
             }
 
-            const value = selectedObject.get('fill') || fillColor;
+            //@ts-ignore
+            // Faulty TS library, fontFamily property exists
+            const value = selectedObject.get('fontFamily') || fontFamily;
             return value as string;
         },
         getActiveStrokeColor: () => {
@@ -240,6 +253,16 @@ const buildEditor = ({
 
             const value = selectedObject.get('stroke') || strokeColor;
             return value;
+        },
+        getActiveFillColor: () => {
+            const selectedObject = selectedObjects[0];
+
+            if (!selectedObject) {
+                return fillColor;
+            }
+
+            const value = selectedObject.get('fill') || fillColor;
+            return value as string;
         },
         getActiveStrokeWidth: () => {
             const selectedObject = selectedObjects[0];
@@ -272,6 +295,7 @@ export const useEditor = ({
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
 
+    const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
     const [fillColor, setFillColor] = useState(FILL_COLOR);
     const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
     const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
@@ -301,6 +325,8 @@ export const useEditor = ({
                 strokeWidth,
                 setStrokeWidth,
                 selectedObjects,
+                fontFamily,
+                setFontFamily,
             });
         };
 
@@ -311,6 +337,7 @@ export const useEditor = ({
         strokeWidth,
         selectedObjects,
         strokeDashArray,
+        fontFamily,
         ]);
 
 

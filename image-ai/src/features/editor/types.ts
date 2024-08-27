@@ -2,6 +2,40 @@ import { fabric } from 'fabric';
 import { ITextboxOptions } from 'fabric/fabric-impl';
 import * as material from 'material-colors';
 
+export const fonts = [
+    "Arial",
+    "Helvetica",
+    "Times New Roman",
+    "Georgia",
+    "Courier New",
+    "Verdana",
+    "Trebuchet MS",
+    "Lucida Sans",
+    "Tahoma",
+    "Palatino",
+    "Garamond",
+    "Impact",
+    "Comic Sans MS",
+    "Futura",
+    "Baskerville",
+    "Gill Sans",
+    "Calibri",
+    "Cambria",
+    "Franklin Gothic Medium",
+    "Roboto",
+    "Open Sans",
+    "Lato",
+    "Montserrat",
+    "Poppins",
+    "Oswald",
+    "Raleway",
+    "Merriweather",
+    "Playfair Display",
+    "Nunito",
+    "Quicksand"
+];
+
+
 export const selectionDependentTools = [
     'fill',
     'font',
@@ -115,11 +149,13 @@ export type BuildEditorProps = {
     strokeWidth: number;
     strokeColor: string;
     strokeDashArray: number[];
+    fontFamily: string;
+    selectedObjects: fabric.Object[];
     setFillColor: (value: string) => void;
     setStrokeColor: (value: string) => void;
     setStrokeWidth: (value: number) => void;
     setStrokeDashArray: (value: number[]) => void;
-    selectedObjects: fabric.Object[];
+    setFontFamily: (value: string) => void;
 }
 
 export interface EditorHookProps {
@@ -135,6 +171,7 @@ export interface Editor {
     changeFillColor: (value: string) => void;
     changeStrokeColor: (value: string) => void;
     changeStrokeWidth: (value: number) => void;
+    changeFontFamily: (value: string) => void;
     changeStrokeDashArray: (value: number[]) => void;
     addCircle: () => void;
     addSoftRectangle: () => void;
@@ -148,6 +185,7 @@ export interface Editor {
     getActiveStrokeColor: () => string;
     getActiveStrokeWidth: () => number;
     getActiveStrokeDashArray: () => number[];
+    getActiveFontFamily: () => string;
 }
 
 
