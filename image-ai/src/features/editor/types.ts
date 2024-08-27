@@ -91,6 +91,7 @@ export const STROKE_WIDTH = 2;
 export const STROKE_DASH_ARRAY = [];
 export const FONT_FAMILY = 'Arial';
 export const FONT_SIZE = 32;
+export const FONT_WEIGHT = 400;
 
 export const CIRCLE_OPTIONS = {
     radius: 225,
@@ -172,6 +173,8 @@ export interface Editor {
     changeStrokeColor: (value: string) => void;
     changeStrokeWidth: (value: number) => void;
     changeFontFamily: (value: string) => void;
+    changeFontWeight: (value: number) => void;
+    changeFontStyle: (value: string) => void;
     changeStrokeDashArray: (value: number[]) => void;
     addCircle: () => void;
     addSoftRectangle: () => void;
@@ -186,6 +189,9 @@ export interface Editor {
     getActiveStrokeWidth: () => number;
     getActiveStrokeDashArray: () => number[];
     getActiveFontFamily: () => string;
+    getActiveFontWeight: () => number;
+    getActiveFontStyle: () => string;
+
 }
 
 

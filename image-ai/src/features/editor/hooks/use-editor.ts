@@ -9,6 +9,7 @@ import {
     EditorHookProps, 
     FILL_COLOR, 
     FONT_FAMILY, 
+    FONT_WEIGHT, 
     RECTANGLE_OPTIONS, 
     STROKE_COLOR, 
     STROKE_DASH_ARRAY, 
@@ -75,6 +76,38 @@ const buildEditor = ({
 
             const value = selectedObject.get('opacity') || 1;
             return value;
+        },
+        changeFontWeight: (value: number) => {
+            canvas.getActiveObjects().forEach((obj) => {
+                if (isTextType(obj.type)) {
+                    //@ts-ignore
+                    // Faulty TS library, fontWeight property exists
+                    obj.set({ fontWeight: value });
+                }
+            });
+            canvas.renderAll();
+        },
+        changeFontStyle: (value: string) => {
+            canvas.getActiveObjects().forEach((obj) => {
+                if (isTextType(obj.type)) {
+                    //@ts-ignore
+                    // Faulty TS library, fontStyle property exists
+                    obj.set({ fontStyle: value });
+                }
+            });
+            canvas.renderAll();
+        },
+        getActiveFontStyle: () => {
+            const selectedObject = selectedObjects[0];
+
+            if (!selectedObject) {
+                return 'normal';
+            }
+
+            //@ts-ignore
+            // Faulty TS library, fontStyle property exists
+            const value = selectedObject.get('fontStyle') || 'normal';
+            return value as string;
         },
         changeOpacity: (value: number) => {
             canvas.getActiveObjects().forEach((obj) => {
@@ -232,6 +265,18 @@ const buildEditor = ({
             addToCanvas(object);
         },
         canvas,
+        getActiveFontWeight: () => {
+            const selectedObject = selectedObjects[0];
+
+            if (!selectedObject) {
+                return FONT_WEIGHT;
+            }
+
+            //@ts-ignore
+            // Faulty TS library, fontFamily property exists
+            const value = selectedObject.get('fontWeight') || FONT_WEIGHT;
+            return value as number;
+        },
         getActiveFontFamily: () => {
             const selectedObject = selectedObjects[0];
 
