@@ -18,11 +18,12 @@ import {
     FaUnderline
 } from 'react-icons/fa';
 
-import { ActiveTool, Editor, FONT_WEIGHT } from "../types";
+import { ActiveTool, Editor, FONT_SIZE, FONT_WEIGHT } from "../types";
 import { cn } from "@/lib/utils";
 
 import { Hint } from "./tooltip";
 import { isTextType } from "../utils";
+import { FontSizeInput } from './font-size-input';
 
 interface ToolbarProps {
     editor: Editor | undefined;
@@ -45,6 +46,7 @@ export const Toolbar = ({
     const initialFontUnderline = editor?.getActiveFontUnderline();
     const initialFontLinethrough = editor?.getActiveFontLinethrough();
     const initialTextAlign = editor?.getActiveTextAlign();
+    const initialFontSize = editor?.getActiveFontSize() || FONT_SIZE;
 
     const [properties, setProperties] = useState({
         fillColor: initialFillColor,
@@ -55,7 +57,7 @@ export const Toolbar = ({
         fontUnderline: initialFontUnderline,
         fontLinethrough: initialFontLinethrough,
         textAlign: initialTextAlign,
-
+        fontSize: initialFontSize,
     });
 
     const selectedObject = editor?.selectedObjects[0];
@@ -63,6 +65,17 @@ export const Toolbar = ({
     
     const isText = isTextType(selectedObjectType);
 
+    const onChangeFontSize = (value: number) => {
+        if (!selectedObject) {
+            return initialFontSize;
+        };
+
+        editor?.changeFontSize(value);
+        setProperties((current) => ({
+            ...current,
+            fontSize: value,
+        }))
+    };
     const onChangeTextAlign = (value: string) => {
         if (!selectedObject) {
             return ;
@@ -323,6 +336,14 @@ export const Toolbar = ({
                         <AlignRight className="size-4"/>
                     </Button>
                 </Hint>
+            </div>
+            )}
+            {isText && (
+            <div className="flex items-center justify-center h-full">
+                <FontSizeInput 
+                    value={properties.fontSize}
+                    onChange={onChangeFontSize}
+                />    
             </div>
             )}
             <div className="flex items-center justify-center h-full">

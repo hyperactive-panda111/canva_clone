@@ -178,6 +178,7 @@ export interface Editor {
     changeFontLinethrough: (value: boolean) => void;
     changeStrokeDashArray: (value: number[]) => void;
     changeFontUnderline: (value: boolean) => void;
+    changeFontSize: (value: number) => void;
     addCircle: () => void;
     changeTextAlign: (value: string) => void;
     addSoftRectangle: () => void;
@@ -197,7 +198,7 @@ export interface Editor {
     getActiveFontLinethrough: () => boolean;
     getActiveFontUnderline: () => boolean;
     getActiveTextAlign: () => string;
-
+    getActiveFontSize: () => number;
 }
 
 

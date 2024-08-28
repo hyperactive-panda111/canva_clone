@@ -9,6 +9,7 @@ import {
     EditorHookProps, 
     FILL_COLOR, 
     FONT_FAMILY, 
+    FONT_SIZE, 
     FONT_WEIGHT, 
     RECTANGLE_OPTIONS, 
     STROKE_COLOR, 
@@ -130,6 +131,29 @@ const buildEditor = ({
             // Faulty TS library, underline property exists
             const value = selectedObject.get('underline') || false;
             return value as boolean;
+        },
+        changeFontSize: (value: number) => {
+            canvas.getActiveObjects().forEach((obj) => {
+                if (isTextType(obj.type)) {
+                    //@ts-ignore
+                    //Faulty TS library, fontSize exists.
+                    obj.set({ fontSize: value});
+                }
+            });
+
+            canvas.renderAll();
+        },
+        getActiveFontSize: () => {
+            const selectedObject = selectedObjects[0];
+
+            if (!selectedObject) {
+                return FONT_SIZE;
+            }
+
+            //@ts-ignore
+            //Faulty TS library, textAlign exists.
+            const value = selectedObject.get('fontSize') || FONT_SIZE;
+            return value as number;
         },
         changeTextAlign: (value: string) => {
             canvas.getActiveObjects().forEach((obj) => {
@@ -443,6 +467,7 @@ export const useEditor = ({
         };
 
         return undefined;
+        
     }, [canvas,
         fillColor,
         strokeColor,
