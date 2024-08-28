@@ -7,7 +7,8 @@ import {
      ChevronDown, 
      AlignLeft,
      AlignCenter,
-     AlignRight
+     AlignRight,
+     Trash
 } from "lucide-react";
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { Button } from "@/components/ui/button";
@@ -377,6 +378,17 @@ export const Toolbar = ({
                         className={cn(activeTool === 'opacity' && 'bg-gray-100')}
                     >
                         <RxTransparencyGrid className="size-4"/>
+                    </Button>
+                </Hint>
+            </div>
+            <div className="flex items-center justify-center h-full">
+                <Hint label="Delete" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => editor?.delete()}
+                        variant={'ghost'}
+                        size={'icon'}
+                    >
+                        <Trash className="size-4"/>
                     </Button>
                 </Hint>
             </div>
