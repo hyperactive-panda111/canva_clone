@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useGetImages } from "@/features/images/api/use-get-images";
 import { AlertTriangle, Loader } from "lucide-react";
+import { UploadButton } from '@/lib/uploadthing';
 
 interface ImageSidebarProps {
   editor?: Editor;
@@ -39,6 +40,22 @@ export const ImageSidebar = ({
         title={"Images"}
         description="Add images to your canvas"
       />
+      <div className='p-4 border-b'>
+        <UploadButton
+          endpoint='imageUploader'
+          onClientUploadComplete={(res: any) => {
+            editor?.addImage(res[0].url)
+          }}
+          appearance={{ 
+            button: 'w-full text-sm font-medium',
+            allowedContent: 'hidden'
+          }}
+          content={{
+            button: 'Upload Image'
+          }}
+
+          />
+      </div>
       {isLoading && (
         <div className="flex items-center justify-center flex-1">
           <Loader className="animate-spin size-4 text-muted-foreground" />
