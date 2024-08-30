@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { unsplash } from '@/lib/unsplash';
 
 const DEFAULT_COUNT = 50;
-const DEFAULT_COLLECTION_IDS = ['317099'];
+const DEFAULT_COLLECTION_IDS = ["317099"];
 
 const app = new Hono()
     .get('/', async (c) => {
@@ -13,10 +13,9 @@ const app = new Hono()
         });
 
         if (images.errors) {
-            return c.json({error: 'Something went wrong' }, 400);
+            return c.json({ error: 'Something went wrong' }, 400);
         }
 
-        console.log('Images: ', images);
         let response = images.response;
 
         if (!Array.isArray(response)) {
