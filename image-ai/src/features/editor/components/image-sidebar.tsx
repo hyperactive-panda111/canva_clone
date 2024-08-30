@@ -17,9 +17,11 @@ interface ImageSidebarProps {
 }
 
 export const ImageSidebar = ({
+  editor,
   activeTool,
   onChangeActiveTool,
 }: ImageSidebarProps) => {
+  
   const { isLoading, isError, data } = useGetImages();
 
   const onClose = () => {
@@ -52,12 +54,13 @@ export const ImageSidebar = ({
       )}
       <ScrollArea>
         <div className="p-4">
-          <div className="grid grid-c-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             {data &&
               data.map((image) => {
                 return (
                   <button
                     key={image.id}
+                    onClick={() => {editor?.addImage(image.urls.small)}}
                     className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
                   >
                     <Image
