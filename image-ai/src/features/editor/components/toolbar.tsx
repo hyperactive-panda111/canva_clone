@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { Button } from "@/components/ui/button";
+import { TbColorFilter } from 'react-icons/tb';
+
 import { 
     FaItalic, 
     FaBold,
@@ -65,6 +67,7 @@ export const Toolbar = ({
     const selectedObjectType = editor?.selectedObjects[0]?.type;
     
     const isText = isTextType(selectedObjectType);
+    const isImage = selectedObjectType === 'image';
 
     const onChangeFontSize = (value: number) => {
         if (!selectedObject) {
@@ -158,6 +161,7 @@ export const Toolbar = ({
     return (
         <div className='shrink-0 h-[56px] border-b bg-white w-full flex
         items-center overflow-x-auto z-[49] p-2 gap-x-2'>
+            {!isImage && (
             <div className="flex items-center justify-center h-full">
                 <Hint label="Color" side="bottom" sideOffset={5}>
                     <Button
@@ -177,6 +181,7 @@ export const Toolbar = ({
                     </Button>
                 </Hint>
             </div>
+            )}
             {!isText && (
             <div className="flex items-center justify-center h-full">
                 <Hint label="Border Color" side="bottom" sideOffset={5}>
@@ -345,6 +350,21 @@ export const Toolbar = ({
                     value={properties.fontSize}
                     onChange={onChangeFontSize}
                 />    
+            </div>
+            )}
+            {isImage && (<div className="flex items-center justify-center h-full">
+                <Hint label="Filters" side="bottom" sideOffset={5}>
+                    <Button
+                        onClick={() => onChangeActiveTool('filter')}
+                        variant={'ghost'}
+                        size={'icon'}
+                        className={cn(
+                            properties.textAlign === 'right' && 'bg-gray-100'
+                        )}
+                    >
+                        <TbColorFilter className="size-4"/>
+                    </Button>
+                </Hint>
             </div>
             )}
             <div className="flex items-center justify-center h-full">

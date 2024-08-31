@@ -21,7 +21,7 @@ import {
 
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
-import { isTextType } from '../utils';
+import { createFilter, isTextType } from '../utils';
 
 const buildEditor = ({ 
     canvas,
@@ -58,6 +58,21 @@ const buildEditor = ({
     }
 
     return {
+        changeImageFilter: (value: string) => {
+            const objects = canvas.getActiveObjects();
+            objects.forEach((obj) => {
+                if (obj.type === 'image') {
+
+                    const imageObject = obj as fabric.Image;
+
+                    const effect = createFilter(value);
+
+                    imageObject.filters = effect ? [effect] : [];
+                    imageObject.applyFilters();
+                    canvas.renderAll();
+                }
+            })
+        },
         addImage: (value: string) => {
             fabric.Image.fromURL(
                 value,

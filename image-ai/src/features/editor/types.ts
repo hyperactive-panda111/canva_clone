@@ -163,7 +163,34 @@ export interface EditorHookProps {
     clearSelectionCallback: () => void;
 }
 
+export const filters = [
+    "none",
+    "polaroid",
+    "sepia",
+    "kodachrome",
+    "contrast",
+    "brightness",
+    "greyscale",
+    "brownie",
+    "vintage",
+    "technicolor",
+    "pixelate",
+    "invert",
+    "blur",
+    "sharpen",
+    "emboss",
+    "removecolor",
+    "blacknwhite",
+    "vibrance",
+    "blendcolor",
+    "huerotate",
+    "resize",
+    "saturation",
+    "gamma",
+  ];
+  
 export interface Editor {
+    changeImageFilter: (value: string) => void;
     addImage: (value: string) => void;
     delete: () => void;
     addText: (value: string, options?: ITextboxOptions) => void;
