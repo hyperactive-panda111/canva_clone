@@ -22,6 +22,7 @@ import {
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
 import { createFilter, isTextType } from '../utils';
+import { useClipboard } from './use-clipboard';
 
 const buildEditor = ({ 
     canvas,
@@ -472,6 +473,8 @@ export const useEditor = ({
     const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
     const [strokeDashArray, setStrokeDashArray] = useState<number[]>(STROKE_DASH_ARRAY);
 
+    useClipboard();
+    
     useAutoResize({
         canvas,
         container,
