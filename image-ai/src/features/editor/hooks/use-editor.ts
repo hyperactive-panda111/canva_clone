@@ -61,6 +61,16 @@ const buildEditor = ({
     }
 
     return {
+        enableDrawingMode: () => {
+            canvas.discardActiveObject();
+            canvas.renderAll();
+            canvas.isDrawingMode = true;
+            canvas.freeDrawingBrush.color = strokeColor;
+            canvas.freeDrawingBrush.width = strokeWidth;
+        },
+        disableDrawingMode: () => {
+            canvas.isDrawingMode = false;
+        },
         onCopy: () => copy(),
         onPaste: () => paste(),
         changeImageFilter: (value: string) => {

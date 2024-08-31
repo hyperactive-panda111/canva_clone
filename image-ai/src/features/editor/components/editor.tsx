@@ -26,22 +26,7 @@ import { AISidebar } from "./ai-sidebar";
 export const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
 
-  const onChangeActiveTool = useCallback((tool: ActiveTool) => {
-    if (tool === activeTool) {
-      return setActiveTool('select');
-    }
-
-    if (tool === 'draw') {
-      //TODO: Enable draw mode 
-    }
-
-    if (activeTool === 'draw') {
-      //TODO: Disable draw mode
-    }
-
-    setActiveTool(tool);
-  },[activeTool]);
-
+  
   const onClearSelection = useCallback(() => {
     if (selectionDependentTools.includes(activeTool)) {
       setActiveTool('select');
@@ -51,6 +36,24 @@ export const Editor = () => {
   const { init, editor } = useEditor({
     clearSelectionCallback: onClearSelection
   });
+
+  const onChangeActiveTool = useCallback((tool: ActiveTool) => {
+    if (tool === 'draw') {
+      editor?.enableDrawingMode();
+    }
+
+    if (activeTool === 'draw') {
+      editor?.disableDrawingMode();
+    }
+    
+    if (tool === activeTool) {
+      return setActiveTool('select');
+    }
+
+
+    setActiveTool(tool);
+  },[activeTool, editor]);
+
 
   const canvasRef = useRef(null); 
   const containerRef = useRef<HTMLDivElement>(null);
