@@ -22,6 +22,7 @@ import { FontSidebar } from "./font-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { FilterSidebar } from "./filter-sidebar";
 import { AISidebar } from "./ai-sidebar";
+import { DrawSidebar } from "./draw-sidebar";
 
 export const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
@@ -45,7 +46,7 @@ export const Editor = () => {
     if (activeTool === 'draw') {
       editor?.disableDrawingMode();
     }
-    
+
     if (tool === activeTool) {
       return setActiveTool('select');
     }
@@ -125,7 +126,17 @@ export const Editor = () => {
           onChangeActiveTool={onChangeActiveTool}
           editor={editor}
         />
+        <FilterSidebar
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+          editor={editor}
+        />
         <AISidebar
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+          editor={editor}
+        />
+        <DrawSidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
           editor={editor}
