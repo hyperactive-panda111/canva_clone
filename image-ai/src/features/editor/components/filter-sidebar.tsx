@@ -8,6 +8,7 @@ import { ToolSidebarHeader } from "./tool-sidebar-header";
 import { ToolSidebarClose } from "./tool-sidebar-close";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface FilterSidebarProps {
     editor?: Editor;
@@ -21,6 +22,7 @@ export const FilterSidebar = ({
     onChangeActiveTool,
 }: FilterSidebarProps) => {
 
+    const [currentFilter, setCurrentFilter] = useState<string>('');
     const onClose = () => {
         onChangeActiveTool('select');
     };
@@ -42,9 +44,13 @@ export const FilterSidebar = ({
                         key={filter}
                         size={'lg'}
                         variant={'secondary'}
+                        onClick={() => {editor?.changeImageFilter(filter);
+                            setCurrentFilter(filter);
+                        }}
                         className={cn(
-                            "w-full h-16 text-left justify-start")}
-                        onClick={() => editor?.changeImageFilter(filter)}
+                            "w-full h-16 text-left justify-start",
+                            currentFilter === filter && 'border-2 border-blue-500')
+                        }
                       >
                         {filter}
                       </Button>
