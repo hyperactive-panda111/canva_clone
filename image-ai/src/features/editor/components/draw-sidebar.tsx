@@ -1,9 +1,11 @@
 import { cn } from "@/lib/utils";
-import { ActiveTool, Editor, FILL_COLOR, STROKE_COLOR } from "../types";
+import { ActiveTool, Editor, STROKE_COLOR, STROKE_WIDTH } from "../types";
 import { ToolSidebarHeader } from "./tool-sidebar-header";
 import { ToolSidebarClose } from "./tool-sidebar-close";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ColorPicker } from "./color-picker";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 interface DrawSidebarProps {
     editor?: Editor;
@@ -16,15 +18,21 @@ export const DrawSidebar = ({
     activeTool,
     onChangeActiveTool,
 }: DrawSidebarProps) => {
-    const value = editor?.getActiveStrokeColor() || STROKE_COLOR;
+    const colorValue = editor?.getActiveStrokeColor() || STROKE_COLOR;
+    const widthValue = editor?.getActiveStrokeWidth() || STROKE_WIDTH;
     
     const onClose = () => {
+        editor?.disableDrawingMode();
         onChangeActiveTool('select');
     };
 
-    const onChange = (value: string) => {
+    const onColorChange = (value: string) => {
         editor?.changeStrokeColor(value);
-    }
+    };
+
+    const onWidthChange =  (value: number) => {
+        editor?.changeStrokeWidth(value);
+    };
     
     return (
         <aside
@@ -36,10 +44,21 @@ export const DrawSidebar = ({
                 title={"Draw"}
                 description='Modify brush settinggs' />
             <ScrollArea>
+            <div className="p-4 space-y-6 border-b">
+                <Label className='text-sm'>
+                    Brush Width
+                </Label>
+                <Slider
+                    value={[widthValue]}
+                    onValueChange={(values) => {
+                        onWidthChange(values[0]);
+                    }} 
+                />
+            </div>
                 <div className="p-4 space-y-6">
                     <ColorPicker
-                       value={value}
-                       onChange={onChange}
+                       value={colorValue}
+                       onChange={onColorChange}
                     />
                 </div>
             </ScrollArea>
