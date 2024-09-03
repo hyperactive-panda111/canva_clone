@@ -34,7 +34,7 @@ export const useCanvasEvents = ({
 
         return () => {
             if (canvas) {
-                canvas.off('object:created');
+                canvas.off('object:added');
                 canvas.off('object:modified');
                 canvas.off('object:removed');
                 canvas.off('selection:created');
