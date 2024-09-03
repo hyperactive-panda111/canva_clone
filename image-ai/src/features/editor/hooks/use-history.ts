@@ -50,7 +50,7 @@ export const useHistory = ({ canvas }: useHistoryProps) => {
             });
         }
 
-    }, [canUndo, canvas]);
+    }, [canUndo, canvas, historyIndex]);
 
     const redo = useCallback(() => {
         if (canRedo()) {
