@@ -11,6 +11,7 @@ import {
     FONT_FAMILY, 
     FONT_SIZE, 
     FONT_WEIGHT, 
+    JSON_KEYS, 
     RECTANGLE_OPTIONS, 
     STROKE_COLOR, 
     STROKE_DASH_ARRAY, 
@@ -23,8 +24,14 @@ import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
 import { createFilter, isTextType } from '../utils';
 import { useClipboard } from './use-clipboard';
+import { useHistory } from './use-history';
 
 const buildEditor = ({ 
+    save,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
     autoZoom,
     copy, 
     paste,
@@ -62,6 +69,8 @@ const buildEditor = ({
     }
 
     return {
+        canRedo,
+        canUndo,
         autoZoom,
         getWorkspace,
         zoomIn: () => {
@@ -88,12 +97,14 @@ const buildEditor = ({
             workspace?.set(size);
             autoZoom();
             //TODO: Save feature
+            save();
         },
         changeBackground: (value: string) => {
             const workspace = getWorkspace();
             workspace?.set({ fill: value });
             canvas.renderAll();
             //TODO: Save feature
+            save();
         },
         enableDrawingMode: () => {
             canvas.discardActiveObject();
@@ -105,6 +116,8 @@ const buildEditor = ({
         disableDrawingMode: () => {
             canvas.isDrawingMode = false;
         },
+        onUndo: () => undo(),
+        onRedo: () => redo(),
         onCopy: () => copy(),
         onPaste: () => paste(),
         changeImageFilter: (value: string) => {
@@ -530,7 +543,18 @@ export const useEditor = ({
         container,
     });
 
+    const { 
+        save, 
+        canRedo, 
+        canUndo, 
+        redo, 
+        undo, 
+        canvasHistory, 
+        setHistoryIndex,
+     } = useHistory({canvas});
+
     useCanvasEvents({ 
+        save,
         canvas,
         clearSelectionCallback,
         setSelectedObjects,
@@ -539,6 +563,11 @@ export const useEditor = ({
     const editor = useMemo(() => {
         if (canvas) {
             return buildEditor({
+                save,
+                undo,
+                redo,
+                canUndo,
+                canRedo,
                 autoZoom,
                 copy,
                 paste,
@@ -560,6 +589,11 @@ export const useEditor = ({
         return undefined;
         
     }, [
+        save,
+        undo,
+        redo,
+        canUndo,
+        canRedo,
         autoZoom,
         canvas,
         fillColor,
@@ -600,6 +634,10 @@ export const useEditor = ({
 
         setCanvas(initialCanvas);
         setContainer(initialContainer);
+
+        const currentState = JSON.stringify(initialCanvas.toJSON(JSON_KEYS));
+        canvasHistory.current = [currentState];
+        setHistoryIndex(0);
         
     }, []);
 

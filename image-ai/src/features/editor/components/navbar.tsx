@@ -24,16 +24,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface NavbarProps {
+  editor?: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
 import { Hint } from "./tooltip";
 import { BsCloudCheck } from "react-icons/bs";
-import { ActiveTool } from "../types";
+import { ActiveTool, Editor } from "../types";
 import { cn } from "@/lib/utils";
 
 export const Navbar =  ({
+  editor,
   activeTool,
   onChangeActiveTool,
 }: NavbarProps) => {
@@ -73,12 +75,22 @@ export const Navbar =  ({
           </Button>
         </Hint>
         <Hint label={"Undo"} side="bottom" sideOffset={10}>
-          <Button variant="ghost" size={"icon"} onClick={() => {}} className="">
+          <Button 
+            disabled={!editor?.canUndo()}
+            variant="ghost" 
+            size={"icon"} 
+            onClick={() => editor?.onUndo()} 
+            className="">
             <Undo2 className="size-4" />
           </Button>
         </Hint>
         <Hint label={"Redo"} side="bottom" sideOffset={10}>
-          <Button variant="ghost" size={"icon"} onClick={() => {}} className="">
+          <Button 
+            disabled={!editor?.canRedo()}
+            variant="ghost" 
+            size={"icon"} 
+            onClick={() => editor?.onRedo()} 
+            className="">
             <Redo2 className="size-4" />
           </Button>
         </Hint>
