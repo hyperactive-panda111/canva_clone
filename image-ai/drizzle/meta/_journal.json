@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1725470487418,
+      "tag": "0000_slimy_masked_marvel",
+      "breakpoints": true
+    }
+  ]
+}

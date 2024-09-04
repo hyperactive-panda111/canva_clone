@@ -26,6 +26,7 @@ import { createFilter, downloadFile, isTextType, transformText } from '../utils'
 import { useClipboard } from './use-clipboard';
 import { useHistory } from './use-history';
 import { useHotkeys } from './use-hotkeys';
+import { useWindowEvents } from './use-window-events';
 
 const buildEditor = ({ 
     save,
@@ -630,6 +631,8 @@ export const useEditor = ({
         setSelectedObjects,
     });
 
+    useWindowEvents();
+    
     useHotkeys({
         canvas,
         undo,
