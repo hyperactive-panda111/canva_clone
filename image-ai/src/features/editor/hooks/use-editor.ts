@@ -22,7 +22,7 @@ import {
 
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
-import { createFilter, isTextType } from '../utils';
+import { createFilter, downloadFile, isTextType, transformText } from '../utils';
 import { useClipboard } from './use-clipboard';
 import { useHistory } from './use-history';
 import { useHotkeys } from './use-hotkeys';
@@ -49,10 +49,74 @@ const buildEditor = ({
     strokeDashArray,
     setStrokeDashArray,
  }: BuildEditorProps): Editor => {
+
+    const generateSaveOptions = () => {
+        const { width, height, left, top } = getWorkspace() as fabric.Rect;
+        
+        return {
+            name: 'Image',
+            format: 'png',
+            quality: 1,
+            width,
+            height,
+            left, 
+            top,
+        };
+    };
+    
+    const saveJpg = () => {
+	const options = generateSaveOptions();
+
+	canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+	const dataUrl = canvas.toDataURL(options);
+
+	downloadFile(dataUrl, 'jpg');
+	autoZoom();
+};
+
+const savePng = () => {
+	const options = generateSaveOptions();
+
+	canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+	const dataUrl = canvas.toDataURL(options);
+
+	downloadFile(dataUrl, 'png');
+	autoZoom();
+};
+
+const saveSvg = () => {
+	const options = generateSaveOptions();
+
+	canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+	const dataUrl = canvas.toDataURL(options);
+
+	downloadFile(dataUrl, 'svg');
+	autoZoom();
+};
+
+
+const saveJson = async () => {
+	const dataUrl = canvas.toJSON(JSON_KEYS);
+
+	await transformText(dataUrl.objects);
+	const fileString = `data:text/json;charset=utf-8,${encodeURIComponent(
+		JSON.stringify(dataUrl, null, '\t'),
+	)}`;
+    downloadFile(fileString, 'json');
+};
+
+const loadJson = (json: string) => {
+	const data = JSON.parse(json);
+
+	canvas.loadFromJSON(data, () => {
+		autoZoom();
+	});
+};
+
     const getWorkspace = () => {
         return canvas.getObjects().find((obj) => obj.name === 'clip');
     };
-
+    
     const center = (obj: fabric.Object) => {
         const workspace = getWorkspace();
         const center = workspace?.getCenterPoint();
@@ -70,8 +134,13 @@ const buildEditor = ({
     }
 
     return {
-        canRedo,
+        saveJpg,
+        savePng,
+        saveSvg,
+        saveJson,
+        loadJson,
         canUndo,
+        canRedo,
         autoZoom,
         getWorkspace,
         zoomIn: () => {
