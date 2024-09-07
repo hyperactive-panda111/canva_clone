@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import {
     Card,
     CardTitle,
@@ -9,16 +8,22 @@ import {
     CardDescription,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
- 
-import { signIn } from 'next-auth/react';
-import Link from 'next/link';
-import { useState } from 'react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { TriangleAlert } from 'lucide-react';
+ 
+import Link from 'next/link';
+import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export const SignInCard = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const params = useSearchParams();
+    const error = params.get('error');
 
     const onCredentialSignIn = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,6 +49,12 @@ export const SignInCard = () => {
                 Use your email or another service to continue
             </CardDescription>
             </CardHeader>
+            {!!error && (
+                <div className='bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6'>
+                    <TriangleAlert />
+                    <p>Invalid email or password</p>
+                </div>
+            )}
             <CardContent className='space-y-2.5 px-0 pb-0'>
                 <form 
                     onSubmit={onCredentialSignIn}

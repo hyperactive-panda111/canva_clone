@@ -22,9 +22,6 @@ export const useSignUp = () => {
 
       return await response.json();
     },
-    onError: () => {
-        toast.error("Something went wrong");
-    },
     onSuccess: () => {
       toast.success("User created");
     }
