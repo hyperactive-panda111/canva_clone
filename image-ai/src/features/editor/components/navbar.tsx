@@ -34,6 +34,7 @@ import { Hint } from "./tooltip";
 import { BsCloudCheck } from "react-icons/bs";
 import { ActiveTool, Editor } from "../types";
 import { cn } from "@/lib/utils";
+import { UserButton } from '@/features/auth/components/user-button';
 
 export const Navbar =  ({
   editor,
@@ -81,14 +82,13 @@ export const Navbar =  ({
           </DropdownMenuContent>
         </DropdownMenu>
         <Separator orientation="vertical" className="mx-2" />
-        {/* BUTTON TODO: add functionality
-            TODO: add dynamic styles*/}
         <Hint label={"Select"} side="bottom" sideOffset={10}>
           <Button 
             variant="ghost" 
             size={"icon"} 
             onClick={() => onChangeActiveTool('select')} 
-            className={cn(activeTool === 'select' && 'bg-gray-100')}>
+            className={cn(activeTool === 'select' && 'bg-gray-100')}
+          >
             <MousePointerClickIcon className="size-4" />
           </Button>
         </Hint>
@@ -98,7 +98,7 @@ export const Navbar =  ({
             variant="ghost" 
             size={"icon"} 
             onClick={() => editor?.onUndo()} 
-            className="">
+          >
             <Undo2 className="size-4" />
           </Button>
         </Hint>
@@ -117,7 +117,6 @@ export const Navbar =  ({
           <BsCloudCheck className="text-muted-foreground text-sm" />
           <div className="test-xs text-muted-foreground">Saved</div>
         </div>
-      </div>
       <div className="ml-auto flex items-center gap-x-4">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
@@ -177,6 +176,8 @@ export const Navbar =  ({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <UserButton />
+        </div>
       </div>
     </nav>
   );
