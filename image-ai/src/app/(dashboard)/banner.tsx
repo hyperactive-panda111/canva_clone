@@ -1,7 +1,29 @@
+'use client';
+
 import { Button } from "@/components/ui/button";
+import { useCreateProject } from "@/features/projects/api/use-create-projects";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const Banner = () => {
+    const router = useRouter();
+    const mutation = useCreateProject();
+
+    const onClick = () => {
+        mutation.mutate({
+            name: 'Untitled project',
+            json: '',
+            width: 900,
+            height: 1200,
+        },
+        {
+            onSuccess: ({ data }) => {
+                router.push(`/editor/${data.id}`);
+            }
+        },
+    )
+    };
+
     return (
         <div className='text-white aspect-[5/1] min-h-[248px] flex gap-x-6 p-6 items-center rounded-xl bg-gradient-to-r from-[#2e62cb] via-[#0073ff] to-[#3faff5]'>
             <div className="rounded-full size-28 items-center justify-center bg-white/50 hidden md:flex">
@@ -17,6 +39,8 @@ export const Banner = () => {
                     Turn insipation into design in no time.
                 </p>
                 <Button
+                    disabled={mutation.isPending}
+                    onClick={onClick}
                     variant='secondary'
                     className='w-[160px]'
                 >
