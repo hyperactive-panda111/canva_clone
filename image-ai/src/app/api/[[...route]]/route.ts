@@ -6,6 +6,7 @@ import authConfig from '@/auth.config';
 import ai from './ai';
 import images from './images';
 import users from './users';
+import projects from './projects';
 
 
 // Revert to 'edge' if planning to run on the edge
@@ -22,6 +23,7 @@ const app = new Hono().basePath('/api');
 app.use('*', initAuthConfig(getAuthConfig));
 
 const routes = app.route('/images', images)
+                   .route('/projects', projects)
                    .route('/ai', ai)
                    .route('/users', users);
 
