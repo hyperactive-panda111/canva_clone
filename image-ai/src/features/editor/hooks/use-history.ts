@@ -3,16 +3,21 @@ import { JSON_KEYS } from "../types";
 
 interface useHistoryProps {
     canvas: fabric.Canvas | null;
+    saveCallback?: (values: {
+        json: string;
+        height: number;
+        width: number;
+    }) => void;
 }
 
-export const useHistory = ({ canvas }: useHistoryProps) => {
+export const useHistory = ({ canvas, saveCallback }: useHistoryProps) => {
     const [historyIndex, setHistoryIndex] = useState(0);
     const canvasHistory = useRef<string[]>([]);
     const skipSave = useRef(false);
-
+  
     const canUndo = useCallback(() => {
         return historyIndex > 0;
-    }, [historyIndex]);
+    }, [historyIndex]);  
 
     const canRedo = useCallback(() => {
         return historyIndex < canvasHistory.current.length - 1;
@@ -29,10 +34,18 @@ export const useHistory = ({ canvas }: useHistoryProps) => {
             setHistoryIndex(canvasHistory.current.length - 1);
         }
 
+        const workspace = canvas
+            .getObjects()
+            .find((object) => object.name === 'clip');
+        const height = workspace?.height || 0;
+        const width = workspace?.width || 0;
+
+        saveCallback?.({ json, height, width });
 
     }, 
     [
-        canvas
+        canvas,
+        saveCallback,
     ]);
 
     const undo = useCallback(() => {
