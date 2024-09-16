@@ -24,8 +24,24 @@ import { FilterSidebar } from "./filter-sidebar";
 import { AISidebar } from "./ai-sidebar";
 import { DrawSidebar } from "./draw-sidebar";
 import { SettingsSidebar } from "./settings-sidebar";
+import { ResponseType } from "@/features/projects/api/use-get-project";
+import { useUpdateProject } from "@/features/projects/api/use-update-project";
 
-export const Editor = () => {
+interface EditorProps {
+  initialData: ResponseType['data'];
+};
+
+export const Editor = ({initialData}: EditorProps) => {
+  const { mutate } = useUpdateProject(initialData.id);
+
+  const debouncedSave = useCallback((values : {
+    json: string,
+    height: number,
+    width: number,
+  }) => {
+  mutate(values);
+  }, [mutate]);
+
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
 
   
@@ -36,7 +52,8 @@ export const Editor = () => {
   }, [activeTool]);
   
   const { init, editor } = useEditor({
-    clearSelectionCallback: onClearSelection
+    clearSelectionCallback: onClearSelection,
+    saveCallback: debouncedSave
   });
 
   const onChangeActiveTool = useCallback((tool: ActiveTool) => {
