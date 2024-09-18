@@ -1,5 +1,6 @@
 "use client";
 
+import debounce from "lodash.debounce";
 import { fabric } from "fabric";
 import { useEditor } from "@/features/editor/hooks/use-editor";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -34,13 +35,17 @@ interface EditorProps {
 export const Editor = ({initialData}: EditorProps) => {
   const { mutate } = useUpdateProject(initialData.id);
 
-  const debouncedSave = useCallback((values : {
-    json: string,
-    height: number,
-    width: number,
-  }) => {
-  mutate(values);
-  }, [mutate]);
+  const debouncedSave = useCallback(
+    debounce(
+      (values : {
+        json: string,
+        height: number,
+        width: number,
+      }) => {
+        // TODO: add debounce
+      mutate(values);
+      }, 500
+    ), [mutate]);
 
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
 
@@ -52,6 +57,9 @@ export const Editor = ({initialData}: EditorProps) => {
   }, [activeTool]);
   
   const { init, editor } = useEditor({
+    defaultState: initialData.json,
+    defaultWidth: initialData.width,
+    defaultHeight: initialData.height,
     clearSelectionCallback: onClearSelection,
     saveCallback: debouncedSave
   });
@@ -95,6 +103,7 @@ export const Editor = ({initialData}: EditorProps) => {
   return (
     <div className="h-full flex flex-col">
       <Navbar 
+        id={initialData.id}
         editor={editor}
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
