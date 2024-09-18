@@ -1,5 +1,5 @@
 import { fabric } from 'fabric';
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { 
     BuildEditorProps,
@@ -27,6 +27,7 @@ import { useClipboard } from './use-clipboard';
 import { useHistory } from './use-history';
 import { useHotkeys } from './use-hotkeys';
 import { useWindowEvents } from './use-window-events';
+import { useLoadState } from './use-load-state';
 
 const buildEditor = ({ 
     save,
@@ -595,9 +596,16 @@ const loadJson = (json: string) => {
 };
 
 export const useEditor = ({
+    defaultState,
+    defaultWidth,
+    defaultHeight,
     clearSelectionCallback,
     saveCallback
 }: EditorHookProps) => {
+    const initialState = useRef(defaultState);
+    const initialWidth = useRef(defaultWidth);
+    const initialHeight = useRef(defaultHeight);
+     
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -644,6 +652,14 @@ export const useEditor = ({
         save,
         paste,
         copy,
+    });
+
+    useLoadState({
+        canvas,
+        autoZoom,
+        initialState,
+        canvasHistory,
+        setHistoryIndex
     });
 
     const editor = useMemo(() => {
@@ -699,8 +715,8 @@ export const useEditor = ({
         initialContainer: HTMLDivElement
     }) => {
         const initialWorkspace = new fabric.Rect({
-            width: 900,
-            height: 1200,
+            width: initialWidth.current,
+            height: initialHeight.current,
             name: 'clip',
             fill: 'white',
             selectable: false,
