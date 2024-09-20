@@ -30,14 +30,31 @@ import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { useDuplicateProject } from '@/features/projects/api/use-duplicate-project';
+import { useDeleteProject } from '@/features/projects/api/use-delete-project';
+import { useConfirm } from '@/hooks/use-confirm';
 
 export const ProjectsSection = () => {
-    const duplicateMutatation = useDuplicateProject();
+    const [ConfirmDialog, confirm] = useConfirm(
+        'Are you sure ?',
+        'You are about to delete this project.' 
+    );
+    
+    const duplicateMutation = useDuplicateProject();
+    const removeMutation = useDeleteProject();
+
     const router = useRouter();
 
     const onCopy = (id: string) => {
-        duplicateMutatation.mutate({ id });
+        duplicateMutation.mutate({ id });
     };
+
+    const onDelete = async (id: string) => {
+        const ok = await confirm();
+
+        if (ok) {
+            removeMutation.mutate({ id });
+        }
+    }
 
     const {
         data,
@@ -54,10 +71,7 @@ export const ProjectsSection = () => {
                     Recent Projects
                 </h3>
                 <div className='flex flex-col gap-y-4 items-center justify-center h-32'>
-                    <Loader className='size-6 text-muted-foreground' />
-                    <p className='animate-spin text-muted-foreground'>
-                        Failed to load projects
-                    </p>
+                    <Loader className='size-6 text-muted-foreground animate-spin' />
                 </div>
             </div>
         );
@@ -71,7 +85,7 @@ export const ProjectsSection = () => {
                 </h3>
                 <div className='flex flex-col gap-y-4 items-center justify-center h-32'>
                     <AlertTriangle className='size-6 text-muted-foreground' />
-                    <p className='text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                         Failed to load projects
                     </p>
                 </div>
@@ -96,6 +110,7 @@ export const ProjectsSection = () => {
     }
    return (
     <div className='space-y-4'>
+        <ConfirmDialog />
         <h3 className='font-semibold tex-lg'>
             Recent Projects
         </h3>
@@ -139,7 +154,7 @@ export const ProjectsSection = () => {
                                     <DropdownMenuContent align='end' className='w-60'>
                                         <DropdownMenuItem
                                             className='cursor-pointer h-10'
-                                            disabled={duplicateMutatation.isPending}
+                                            disabled={duplicateMutation.isPending}
                                             onClick={() => onCopy(project.id)}
                                         >
                                             <CopyIcon className='size-4 mr-2' />
@@ -147,8 +162,8 @@ export const ProjectsSection = () => {
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                             className='cursor-pointer h-10'
-                                            disabled={false}
-                                            onClick={() => {}}
+                                            disabled={removeMutation.isPending}
+                                            onClick={() => onDelete(project.id)}
                                         >
                                             <Trash className='size-4 mr-2' />
                                             Delete
