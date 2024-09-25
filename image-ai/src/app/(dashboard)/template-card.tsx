@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
 import { Crown } from "lucide-react";
 
-import Image from 'next/image'
+import Image from 'next/image';
+
 interface TemplateCardProps {
     imageSrc: string;
     title: string;
-    onClick: (title: string) => void;
+    onClick: () => void;
     disabled?: boolean;
     description: string;
     width: number;
