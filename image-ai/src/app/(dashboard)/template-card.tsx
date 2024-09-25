@@ -27,7 +27,7 @@ export const TemplateCard = ({
     return (
         <button
           disabled={disabled}
-          onClick={()=>{}}
+          onClick={onClick}
           className={cn(
             'space-y-2 group text-left transition flex flex-col',
             disabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'
