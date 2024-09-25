@@ -48,7 +48,7 @@ export const TemplatesSection = () => {
             return null;
     };
     
-    const onClick = (template: ResponseType['data'][0]) => {
+    const onClick = (template: ResponseType["data"][0]) => {
         //TODO: Check if template is pro
 
         mutation.mutate({
