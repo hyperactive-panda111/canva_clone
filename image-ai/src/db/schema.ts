@@ -98,7 +98,7 @@ import {
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    name: text("name"),
+    name: text("name").notNull(),
     description: text("description"),
     userId: text("userId").notNull().references(() => users.id, {
       onDelete: "cascade",
