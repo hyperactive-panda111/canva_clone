@@ -1,3 +1,5 @@
+'use client';
+
 import { ResponseType, useGetTemplates } from "@/features/projects/api/use-get-templates"
 import { Loader, TriangleAlert } from "lucide-react";
 import { TemplateCard } from "./template-card";
