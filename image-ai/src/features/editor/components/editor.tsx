@@ -23,6 +23,7 @@ import { FontSidebar } from "./font-sidebar";
 import { ImageSidebar } from "./image-sidebar";
 import { FilterSidebar } from "./filter-sidebar";
 import { AISidebar } from "./ai-sidebar";
+import { TemplateSidebar } from "./template-sidebar";
 import { DrawSidebar } from "./draw-sidebar";
 import { SettingsSidebar } from "./settings-sidebar";
 import { ResponseType } from "@/features/projects/api/use-get-project";
@@ -42,7 +43,6 @@ export const Editor = ({initialData}: EditorProps) => {
         height: number,
         width: number,
       }) => {
-        // TODO: add debounce
       mutate(values);
       }, 500
     ), [mutate]);
@@ -140,6 +140,11 @@ export const Editor = ({initialData}: EditorProps) => {
           editor={editor}
         />
         <TextSidebar
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+          editor={editor}
+        />
+        <TemplateSidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
           editor={editor}
