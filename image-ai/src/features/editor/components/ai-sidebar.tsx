@@ -5,6 +5,7 @@ import { ToolSidebarClose } from "./tool-sidebar-close";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from "@/components/ui/button";
+import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
 interface AISidebarProps {
     editor?: Editor;
@@ -17,7 +18,7 @@ export const AISidebar = ({
     activeTool,
     onChangeActiveTool,
 }: AISidebarProps) => {
-    
+    const { triggerPaywall, shouldBlock } = usePaywall();    
     
     const onClose = () => {
         onChangeActiveTool('select');
