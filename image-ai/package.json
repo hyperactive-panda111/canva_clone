@@ -54,6 +54,7 @@
     "separator": "^0.1.0",
     "shadcn-ui": "^0.8.0",
     "sonner": "^1.5.0",
+    "stripe": "^16.12.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "tooltip": "^1.6.1",
