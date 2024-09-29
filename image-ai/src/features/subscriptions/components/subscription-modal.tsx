@@ -8,13 +8,16 @@ import {
     DialogContent,
     DialogDescription,
 } from '@/components/ui/dialog';
-import { useSubscriptionModal } from '../store/use-subscription-modal';
-import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle2 } from 'lucide-react';
+
+import { useCheckout } from '../api/use-checkout';
+import { useSubscriptionModal } from '../store/use-subscription-modal';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 export const SubscriptionModal = () => {
+    const mutation = useCheckout();
     const {isOpen, onClose} = useSubscriptionModal();
      
     return (
@@ -51,9 +54,9 @@ export const SubscriptionModal = () => {
                 </ul>
                 <DialogFooter className='pt-2 mt-4 gap-y-2'>
                     <Button
-                        onClick={() => {}}
+                        onClick={() => mutation.mutate()}
                         className='w-full'
-                        disabled={false}
+                        disabled={mutation.isPending}
                     >
                         Upgrade
                     </Button>
