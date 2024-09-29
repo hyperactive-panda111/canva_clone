@@ -12,7 +12,7 @@ export const useCheckout = () => {
     ResponseType,
     Error
   >({
-    mutationFn: async (json) => {
+    mutationFn: async () => {
       const response = await client.api.subscriptions.checkout.$post();
 
       if (!response.ok) {
