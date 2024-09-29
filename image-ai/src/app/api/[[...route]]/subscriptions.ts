@@ -13,12 +13,12 @@ const app = new Hono()
             }
 
             const session = await stripe.checkout.sessions.create({
-                success_url: `${process.env.NEXTPUBLIC_APP_URL}?success=1`,
-                cancel_url: `${process.env.NEXTPUBLIC_APP_URL}?canceled=1`,
+                success_url: `${process.env.NEXT_PUBLIC_APP_URL}?success=1`,
+                cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}?canceled=1`,
                 payment_method_types: ['card', 'paypal',],
                 mode: 'subscription',
                 billing_address_collection: 'auto',
-                customer_email: auth.token?.email || '',
+                customer_email: auth.token.email || '',
                 line_items: [
                     {
                         price: process.env.STRIPE_PRICE_ID,
@@ -26,7 +26,7 @@ const app = new Hono()
                     }
                 ],
                 metadata: {
-                    userId: auth.token?.id
+                    userId: auth.token.id
                 },
             });
 
@@ -36,7 +36,7 @@ const app = new Hono()
                 return c.json({ error: 'Failed to create checkout session'}, 400);
             }
 
-            return c.json({ data: url})
+            return c.json({ data: url })
         });
 
 export default app;
