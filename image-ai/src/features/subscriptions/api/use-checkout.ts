@@ -13,7 +13,7 @@ export const useCheckout = () => {
     Error
   >({
     mutationFn: async (json) => {
-      const response = await client.api.subscriptions.checkout.$post({ json });
+      const response = await client.api.subscriptions.checkout.$post();
 
       if (!response.ok) {
         throw new Error('Failed to create session');
@@ -21,7 +21,7 @@ export const useCheckout = () => {
 
       return await response.json();
     },
-    onSuccess: ({ data}) => {
+    onSuccess: ({ data }) => {
       window.location.href = data;
     },
     onError: () => {
