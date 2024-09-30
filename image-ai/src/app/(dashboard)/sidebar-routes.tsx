@@ -2,18 +2,40 @@
 
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+
 import { CreditCard, Crown, Home, MessageCircleQuestion } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
+
 import { usePathname } from "next/navigation";
+import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
+import { useCheckout } from "@/features/subscriptions/api/use-checkout";
+import { useBilling } from "@/features/subscriptions/api/use-billing";
 
 export const SidebarRoutes = () => {
+    const mutation = useCheckout();
+    const billingMutation = useBilling();    
+    const {shouldBlock, isLoading, triggerPaywall } = usePaywall();
+
+
     const pathname = usePathname();
+
+    const onClick = () => {
+        if (shouldBlock) {
+            triggerPaywall();
+            return;
+        }
+
+        billingMutation.mutate();
+    }
 
     return (
         <div className="flex flex-col gap-y-4 flex-1">
-            <div className='px-4'>
+            {!shouldBlock && !isLoading && (
+            <>
+            <div className='px-3'>
                 <Button
-                    onClick={() => {}}
+                    onClick={() => mutation.mutate()}
+                    disabled={mutation.isPending}
                     className="w-full rounded-xl border-none hover:bg-white hover:opacity-75 transition"
                     variant='outline'
                     size='lg'
@@ -25,6 +47,8 @@ export const SidebarRoutes = () => {
             <div className='px-3'>
                 <Separator />
             </div>
+            </>
+            )}
             <ul className='flex flex-col gap-y-1 px-3'>
                 <SidebarItem 
                     href='/'
@@ -41,7 +65,7 @@ export const SidebarRoutes = () => {
                     href={pathname}
                     icon={CreditCard}
                     label='Billing'
-                    onClick={()=>{}}
+                    onClick={onClick}
                 />
                 <SidebarItem 
                     href={'mailto:support@example.com'}
