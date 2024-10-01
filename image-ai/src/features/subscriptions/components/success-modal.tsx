@@ -47,7 +47,7 @@ export const SuccessModal = () => {
                         onClick={handleClose}
                         className='w-full'
                     >
-                        Upgrade
+                        Continue
                     </Button>
                 </DialogFooter>
             </DialogContent>

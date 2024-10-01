@@ -46,7 +46,7 @@ export const UserButton = () => {
     const imageUrl = session.data?.user?.image;
     return (
         <DropdownMenu modal={false}>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className='outline-none relative'>
                 {!shouldBlock && !isLoading && (
                     <div className='absolute -top-1 -left-1 z-10 flex items-center justify-center'>
                         <div className='rounded-full flex items-center justify-center p-1 bg-white drop-shadow-sm'>

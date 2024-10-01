@@ -30,7 +30,7 @@ export const SidebarRoutes = () => {
 
     return (
         <div className="flex flex-col gap-y-4 flex-1">
-            {!shouldBlock && !isLoading && (
+            {shouldBlock && !isLoading && (
             <>
             <div className='px-3'>
                 <Button

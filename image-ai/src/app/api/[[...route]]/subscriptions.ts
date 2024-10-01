@@ -18,7 +18,7 @@ const app = new Hono()
         const [subscription] = await db
             .select()
             .from(subscriptions)
-            .where(eq(subscriptions.id, auth.token.id));
+            .where(eq(subscriptions.userId, auth.token.id));
 
         if (!subscription) {
             return c.json({ error: 'No subscription found'}, 404);
@@ -45,7 +45,7 @@ const app = new Hono()
         const [subscription] = await db
             .select()
             .from(subscriptions)
-            .where(eq(subscriptions.id, auth.token.id));
+            .where(eq(subscriptions.userId, auth.token.id));
 
         const active = checkIsActive(subscription);
 
@@ -62,7 +62,7 @@ const app = new Hono()
             const auth = c.get('authUser');
 
             if (!auth.token?.id) {
-                return c.json({ error : 'Unauthorized'}, 401);
+                return c.json({ error : 'Unauthorized' }, 401);
             }
 
             const session = await stripe.checkout.sessions.create({
@@ -139,6 +139,8 @@ const app = new Hono()
                     session.subscription as string,
                 );
 
+                console.log('STRIPE DATA: ', subscription)
+
                 if (!session?.metadata?.userId) {
                     return c.json({ error: 'Invalid session' }, 400);
                 }
@@ -149,10 +151,12 @@ const app = new Hono()
                         status: subscription.status,
                         currentPeriodEnd: new Date(subscription.current_period_end * 1000),
                         updatedAt: new Date(),
-                    }).where(
+                    })
+                    .where(
                         eq(subscriptions.id, subscription.id)
                     )
             }
+            
             return c.json(null, 200);
 
 
