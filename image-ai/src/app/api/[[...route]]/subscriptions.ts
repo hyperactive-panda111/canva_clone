@@ -167,8 +167,6 @@ const app = new Hono()
     }
     
     return c.json(null, 200);
-})
-
 
         });
 
