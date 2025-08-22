@@ -92,72 +92,82 @@ const app = new Hono()
             return c.json({ data: url })
         })
         .post('/webhook', async (c) => {
-            const body = await c.req.text();
-            const signature = c.req.header('Stripe-Signature') as string;
+    const body = await c.req.text();
+    const signature = c.req.header('Stripe-Signature') as string;
 
-            let event: Stripe.Event;
+    let event: Stripe.Event;
 
-            try {
-                event = stripe.webhooks.constructEvent(
-                    body,
-                    signature,
-                    process.env.STRIPE_WEBHOOK_SECRET!,
-                )
-            } catch (error) {
-                return c.json({ error: 'Invalid signature' }, 400);
-            }
+    try {
+        event = stripe.webhooks.constructEvent(
+            body,
+            signature,
+            process.env.STRIPE_WEBHOOK_SECRET!,
+        )
+    } catch (error) {
+        return c.json({ error: 'Invalid signature' }, 400);
+    }
 
-            const session = event.data.object as Stripe.Checkout.Session;
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object as Stripe.Checkout.Session;
+        
+        const subscription = await stripe.subscriptions.retrieve(
+            session.subscription as string,
+        );
 
-            if (event.type === 'checkout.session.completed') {
-                const subscription = await stripe.subscriptions.retrieve(
-                    session.subscription as string,
-                );
+        if (!session?.metadata?.userId) {
+            return c.json({ error: 'Invalid session' }, 400);
+        }
 
-                if (!session?.metadata?.userId) {
-                    return c.json({ error: 'Invalid session' }, 400);
-                }
+        await db
+            .insert(subscriptions)
+            .values({
+                status: subscription.status,
+                userId: session.metadata.userId,
+                subscriptionId: subscription.id,
+                customerId: subscription.customer as string,
+                priceId: subscription.items.data[0].price.product as string,
+                currentPeriodEnd: new Date(
+                    subscription.current_period_end * 1000
+                ),
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+    }
 
-                await db
-                    .insert(subscriptions)
-                    .values({
-                        status: subscription.status,
-                        userId: session.metadata.userId,
-                        subscriptionId: subscription.id,
-                        customerId: subscription.customer as string,
-                        priceId: subscription.items.data[0].price.product as string,
-                        currentPeriodEnd: new Date(
-                            subscription.current_period_end * 1000
-                        ),
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    });
-            }
+    if (event.type === 'invoice.payment_succeeded') {
+        const invoice = event.data.object as Stripe.Invoice;
+        
+        const subscription = await stripe.subscriptions.retrieve(
+            invoice.subscription as string,
+        );
 
-            if (event.type === 'invoice.payment_succeeded') {
-                const subscription = await stripe.subscriptions.retrieve(
-                    session.subscription as string,
-                );
+        console.log('STRIPE DATA: ', subscription)
 
-                console.log('STRIPE DATA: ', subscription)
+        // For invoice events, we need to find the user by subscription ID
+        // since invoices don't have the same metadata as checkout sessions
+        const [existingSubscription] = await db
+            .select()
+            .from(subscriptions)
+            .where(eq(subscriptions.subscriptionId, subscription.id));
 
-                if (!session?.metadata?.userId) {
-                    return c.json({ error: 'Invalid session' }, 400);
-                }
+        if (!existingSubscription) {
+            return c.json({ error: 'Subscription not found' }, 400);
+        }
 
-                await db
-                    .update(subscriptions)
-                    .set({
-                        status: subscription.status,
-                        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-                        updatedAt: new Date(),
-                    })
-                    .where(
-                        eq(subscriptions.id, subscription.id)
-                    )
-            }
-            
-            return c.json(null, 200);
+        await db
+            .update(subscriptions)
+            .set({
+                status: subscription.status,
+                currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+                updatedAt: new Date(),
+            })
+            .where(
+                eq(subscriptions.subscriptionId, subscription.id)
+            )
+    }
+    
+    return c.json(null, 200);
+})
 
 
         });
